@@ -37,7 +37,7 @@ def dividir_montos(total):
     if total < MINIMO:
         return [total]
 
-    for n in range(2, 11):
+    for n in range(2, 1001):
         monto = (total / n).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
         if MINIMO <= monto <= MAXIMO:
