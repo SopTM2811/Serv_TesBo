@@ -14,7 +14,7 @@ from telegram.ext import (
     CallbackContext
 )
 
-#ENVIROMENT
+# ENV#
 TOKEN = os.getenv("TOKEN")
 CLCAP = os.getenv("CLCAP") 
 NBCAP = os.getenv("NBCAP") 
@@ -74,7 +74,7 @@ def recibir_mensaje(update: Update, context: CallbackContext):
 
     if estado == "clave":
         if not validar_clave(msj):
-            update.message.reply_text("❌ Formato incorrecto. Ejemplo: 1234-567-A-89")
+            update.message.reply_text("❌ Formato incorrecto. Ejemplo: 12345-678-A-90")
             return
         us[user_id]["clave"] = msj
         us[user_id]["estado"] = "capital"
