@@ -1,5 +1,6 @@
 import logging
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_DOWN
+import random
 import re
 import csv
 import io
@@ -13,7 +14,7 @@ from telegram.ext import (
     CallbackContext
 )
 
-# ENVIROMENT VARIABLE #
+
 TOKEN = os.getenv("TOKEN")
 CLCAP = os.getenv("CLCAP") 
 NBCAP = os.getenv("NBCAP") 
@@ -30,28 +31,27 @@ def validar_clave(clave):
     return re.match(patron, clave) is not None
 
 def dividir_montos(total):
-    total = Decimal(total)
-    MINIMO = Decimal("150000")
+    total = Decimal(str(total))
+    MINIMO = Decimal("250000")
     MAXIMO = Decimal("349999")
 
-    if total < MINIMO:
-        return [total]
+    if total < MAXIMO:
+        return [total.quantize(Decimal("0.01"), rounding=ROUND_DOWN)]
 
-    for n in range(2, 1001):
-        monto = (total / n).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    montos = []
+    sobrante = total
 
-        if MINIMO <= monto <= MAXIMO:
-            partes = [monto] * n
-            diferencia = total - sum(partes)
+    while sobrante >= MINIMO:
+        monto = Decimal(str(random.uniform(float(MINIMO), float(MAXIMO))))
+        monto = monto.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+        if monto > sobrante:
+            continue
+        montos.append(monto)
+        sobrante -= monto
 
-            # Ajustar
-            if diferencia != 0:
-                partes[0] += diferencia
-
-            if all(MINIMO <= p <= MAXIMO for p in partes):
-                return partes
-
-    return [total]
+    if sobrante > 0:
+        montos.append(sobrante.quantize(Decimal("0.01"), rounding=ROUND_DOWN))
+    return montos
 
 def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
@@ -96,7 +96,7 @@ def recibir_mensaje(update: Update, context: CallbackContext):
         us[user_id]["estado"] = "comision"
         update.message.reply_text("✔ Capital recibido.\n\nAhora ingresa la *comisión*:", parse_mode="Markdown")
         return
-
+    
     if estado == "comision":
         try:
             comision = Decimal(msj.replace(",", ""))
@@ -106,11 +106,15 @@ def recibir_mensaje(update: Update, context: CallbackContext):
 
         us[user_id]["comision"] = comision
 
-        generar_csv_memoria(update, context, user_id)
-        us.pop(user_id, None)
+        generar_csv(update, context, user_id)
+        us[user_id] = {"estado": "clave"}
+        update.message.reply_text(
+            "✔ Operación finalizada.\n\nPuedes iniciar otra.\n\nIngresa la clave con formato:\n*1234-567-A-89*",
+            parse_mode="Markdown"
+        )
         return
 
-def generar_csv_memoria(update: Update, context: CallbackContext, user_id):
+def generar_csv(update: Update, context: CallbackContext, user_id):
     datos = us[user_id]
     clave = datos["clave"]
     capital = datos["capital"]
@@ -159,7 +163,6 @@ def generar_csv_memoria(update: Update, context: CallbackContext, user_id):
     )
     output.close()
 
-# -------- MAIN -------- #
 def main():
     print("BOT INICIADO…")
     updater = Updater(TOKEN, use_context=True)
