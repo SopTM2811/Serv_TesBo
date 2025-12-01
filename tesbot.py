@@ -141,14 +141,14 @@ def generar_csv(update: Update, context: CallbackContext, user_id):
         fila[0] = CLCAP
         fila[1] = NBCAP
         fila[2] = str(float(p))
-        fila[3] = clave
+        fila[3] = clave.replace("-", "")
         nueva_filas.append(fila)
 
     fila = fila_vacia.copy()
     fila[0] = CLCOM
     fila[1] = NBCOM
     fila[2] = str(float(comision))
-    fila[3] = clave
+    fila[3] = clave.replace("-", "")
     nueva_filas.append(fila)
 
     output = io.StringIO()
