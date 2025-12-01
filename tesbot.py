@@ -14,7 +14,7 @@ from telegram.ext import (
     CallbackContext
 )
 
-# ENV#
+# ENV #
 TOKEN = os.getenv("TOKEN")
 CLCAP = os.getenv("CLCAP") 
 NBCAP = os.getenv("NBCAP") 
@@ -58,7 +58,7 @@ def start(update: Update, context: CallbackContext):
 
     us[user_id] = {"estado": "clave"}
     update.message.reply_text(
-        "Bienvenido.\n\nPor favor ingresa la clave con formato:\n*1234-567-A-89*",
+        "Bienvenido.\n\nPor favor ingresa la clave con formato:\n*12345-678-A-90*",
         parse_mode="Markdown"
     )
 
@@ -109,7 +109,7 @@ def recibir_mensaje(update: Update, context: CallbackContext):
         generar_csv(update, context, user_id)
         us[user_id] = {"estado": "clave"}
         update.message.reply_text(
-            "✔ Operación finalizada.\n\nPuedes iniciar otra.\n\nIngresa la clave con formato:\n*1234-567-A-89*",
+            "✔ Operación finalizada.\n\nPuedes iniciar otra.\n\nIngresa la clave con formato:\n*12345-678-A-90*",
             parse_mode="Markdown"
         )
         return
