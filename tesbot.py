@@ -31,7 +31,7 @@ def validar_clave(clave):
 
 def dividir_montos(total):
     total = Decimal(total)
-    MINIMO = Decimal("250000")
+    MINIMO = Decimal("150000")
     MAXIMO = Decimal("349999")
 
     if total < MINIMO:
