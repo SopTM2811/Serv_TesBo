@@ -14,7 +14,7 @@ from telegram.ext import (
     CallbackContext
 )
 
-
+#ENVIROMENT
 TOKEN = os.getenv("TOKEN")
 CLCAP = os.getenv("CLCAP") 
 NBCAP = os.getenv("NBCAP") 
@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def validar_clave(clave):
-    patron = r"^\d{4}-\d{3}-[A-Za-z]-\d{2}$"
+    patron = r"^\d{5}-\d{3}-[A-Za-z]-\d{2}$"
     return re.match(patron, clave) is not None
 
 def dividir_montos(total):
@@ -168,7 +168,7 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, recibir_mensaje))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.comman  d, recibir_mensaje))
     updater.start_polling()
     updater.idle()
 
