@@ -141,14 +141,14 @@ def generar_csv(update: Update, context: CallbackContext, user_id):
         fila[0] = CLCAP
         fila[1] = NBCAP
         fila[2] = str(float(p))
-        fila[3] = clave.replace("-", "")
+        fila[3] = clave.replace("-", "") + "D1"
         nueva_filas.append(fila)
 
     fila = fila_vacia.copy()
     fila[0] = CLCOM
     fila[1] = NBCOM
     fila[2] = str(float(comision))
-    fila[3] = clave.replace("-", "")
+    fila[3] = clave.replace("-", "") + "D1"
     nueva_filas.append(fila)
 
     output = io.StringIO()
@@ -168,7 +168,7 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.comman  d, recibir_mensaje))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, recibir_mensaje))
     updater.start_polling()
     updater.idle()
 
