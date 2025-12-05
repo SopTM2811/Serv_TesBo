@@ -168,7 +168,7 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.comman  d, recibir_mensaje))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, recibir_mensaje))
     updater.start_polling()
     updater.idle()
 
